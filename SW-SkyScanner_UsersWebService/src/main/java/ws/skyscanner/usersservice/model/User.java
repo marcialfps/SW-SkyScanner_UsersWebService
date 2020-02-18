@@ -1,4 +1,4 @@
-package ws.skyscanner.usersservice.model;
+package main.java.ws.skyscanner.usersservice.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -84,6 +84,12 @@ public class User {
 
 	public void setAirport(String airport) {
 		this.airport = airport;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", name=" + name + ", surname=" + surname + ", password="
+				+ password + ", mail=" + mail + ", airport=" + airport + "]";
 	}
 	
 }

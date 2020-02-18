@@ -1,4 +1,4 @@
-package ws.skyscanner.usersservice.persistence;
+package main.java.ws.skyscanner.usersservice.persistence;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

@@ -1,3 +1,11 @@
-jdbc:hsqldb:hsql://localhost/
+jdbc:hsqldb:hsql://localhost/skyscannerdb
 User: SA
-Pass: 
+Pass:
+
+
+COMANDO PARA LANZAR LA BD:
+Desde la carpeta hsqldb lanzar
+java -classpath lib/hsqldb.jar org.hsqldb.server.Server --database.0 file:hsqldb/skyscannerdb --dbname.0 skyscannerdb
+
+URL DEL WS:
+http://localhost:8080/SW-SkyScanner_UsersWebClient/usersapi/users

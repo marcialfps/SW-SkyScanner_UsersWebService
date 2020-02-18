@@ -1,12 +1,13 @@
-package ws.skyscanner.usersservice.persistence.user;
+package main.java.ws.skyscanner.usersservice.persistence.user;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.apache.log4j.Logger;
 
-import ws.skyscanner.usersservice.model.User;
-import ws.skyscanner.usersservice.persistence.Dba;
+import main.java.ws.skyscanner.usersservice.model.User;
+import main.java.ws.skyscanner.usersservice.persistence.Dba;
 
 public class UserDAO implements UserDataService {
 	
@@ -25,7 +26,7 @@ public class UserDAO implements UserDataService {
 					.getResultList();
 
 			if(!userList.isEmpty()) {
-				logger.debug("Result user: "+ userList.get(0).toString());
+				logger.debug("Returning user: "+ userList.get(0).toString());
 			} else {
 				return null;
 			}
@@ -41,20 +42,44 @@ public class UserDAO implements UserDataService {
 
 	@Override
 	public User addUser(User user) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		Dba dba = new Dba();
+		try {
+			EntityManager em = dba.getActiveEm();
+			em.persist(user);
+			em.getTransaction().commit();
+
+			logger.debug("Created user: "+ user.toString());
+
+		} finally {
+			// 100% sure that the transaction and entity manager will be closed
+			dba.closeEm();
+		}
+
+		// We return the result
+		return user;
 	}
 
 	@Override
 	public User updateUser(User user) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return addUser(user);
 	}
 
 	@Override
 	public User deleteUser(String username) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		User user = getUser(username);
+		Dba dba = new Dba();
+		try {
+			EntityManager em = dba.getActiveEm();
+			em.remove(user);
+			em.getTransaction().commit();
+
+			logger.debug("Removed user: "+ user.toString());
+
+		} finally {
+			// 100% sure that the transaction and entity manager will be closed
+			dba.closeEm();
+		}
+		return user;
 	}
 
 }

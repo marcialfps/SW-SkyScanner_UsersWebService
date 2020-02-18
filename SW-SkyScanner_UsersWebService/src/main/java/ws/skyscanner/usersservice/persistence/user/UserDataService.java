@@ -1,8 +1,8 @@
-package ws.skyscanner.usersservice.business;
+package main.java.ws.skyscanner.usersservice.persistence.user;
 
-import ws.skyscanner.usersservice.model.User;
+import main.java.ws.skyscanner.usersservice.model.User;
 
-public interface UserManagerService {
+public interface UserDataService {
 	public User getUser(String username) throws Exception;
 	public User addUser(User user) throws Exception;
 	public User updateUser(User user) throws Exception;
