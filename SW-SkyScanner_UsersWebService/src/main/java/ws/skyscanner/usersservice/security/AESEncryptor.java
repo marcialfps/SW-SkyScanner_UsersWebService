@@ -33,7 +33,7 @@ public class AESEncryptor {
         }
     }
  
-    String encrypt(String strToEncrypt) 
+    public String encrypt(String strToEncrypt) 
     {
         try
         {
@@ -49,4 +49,19 @@ public class AESEncryptor {
         return null;
     }
 
+    public String decrypt(String strToDecrypt)
+    {
+        try
+        {
+            setKey(defaultSecret);
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error while decrypting: " + e.toString());
+        }
+        return null;
+    }
 }

@@ -11,14 +11,17 @@ import javax.ws.rs.core.Response;
 import main.java.ws.skyscanner.usersservice.business.UserManager;
 import main.java.ws.skyscanner.usersservice.business.UserManagerService;
 import main.java.ws.skyscanner.usersservice.model.User;
+import main.java.ws.skyscanner.usersservice.security.AESEncryptor;
 
 @Path("users")
 public class UsersService {
 	
 	private UserManagerService userManager;
+	private AESEncryptor encryptor;
 	
 	public UsersService() {
 		this.userManager = new UserManager();
+		this.encryptor = new AESEncryptor();
 	}
 	
 	@GET
@@ -36,8 +39,17 @@ public class UsersService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response login(User user) {
 		try {
-			User myuser = userManager.getUser(user.getUsername());
-			if(myuser.getPassword().equals(user.getPassword())) {
+			String decryptedUser = encryptor.decrypt(user.getUsername());
+			String decryptedPass = encryptor.decrypt(user.getPassword());
+			
+			User myuser = userManager.getUser(decryptedUser);
+			
+			//User does not exist
+			if (myuser == null) {
+				return Response.status(Response.Status.FORBIDDEN).build();
+			}
+			
+			if(myuser.getPassword().equals(decryptedPass)) {
 				return Response.status(Response.Status.ACCEPTED).entity(user).build();
 			} else {
 				return Response.status(Response.Status.FORBIDDEN).build();
