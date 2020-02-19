@@ -61,7 +61,29 @@ public class UserDAO implements UserDataService {
 
 	@Override
 	public User updateUser(User user) throws Exception {
-		return addUser(user);
+		Dba dba = new Dba();
+		try {
+			EntityManager em = dba.getActiveEm();
+			User actualUser = this.getUser(user.getUsername());
+			actualUser.setAirport(user.getAirport());
+			actualUser.setMail(user.getMail());
+			actualUser.setName(user.getName());
+			actualUser.setPassword(user.getPassword());
+			actualUser.setSurname(user.getSurname());
+			actualUser.setUsername(user.getUsername());
+			
+			em.persist(actualUser);
+			em.getTransaction().commit();
+
+			logger.debug("Created user: "+ user.toString());
+
+		} finally {
+			// 100% sure that the transaction and entity manager will be closed
+			dba.closeEm();
+		}
+
+		// We return the result
+		return user;
 	}
 
 	@Override
@@ -80,6 +102,32 @@ public class UserDAO implements UserDataService {
 			dba.closeEm();
 		}
 		return user;
+	}
+
+	@Override
+	public List<User> getUsers() throws Exception {
+		List<User> userList = null;
+
+		Dba dba = new Dba();
+		try {
+			EntityManager em = dba.getActiveEm();
+
+			userList = em.createQuery("Select u From User u", User.class)
+					.getResultList();
+
+			if(!userList.isEmpty()) {
+				logger.debug("Returning users");
+			} else {
+				return null;
+			}
+
+		} finally {
+			// 100% sure that the transaction and entity manager will be closed
+			dba.closeEm();
+		}
+
+		// We return the result
+		return userList;
 	}
 
 }

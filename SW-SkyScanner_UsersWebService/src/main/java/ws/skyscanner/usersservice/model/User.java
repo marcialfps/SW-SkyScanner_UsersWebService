@@ -3,7 +3,10 @@ package main.java.ws.skyscanner.usersservice.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "user")
 @Entity
 public class User {
 	
@@ -30,6 +33,7 @@ public class User {
 		this.airport = airport;
 	}
 
+	@XmlElement
 	public int getId() {
 		return id;
 	}
@@ -38,6 +42,7 @@ public class User {
 		this.id = id;
 	}
 
+	@XmlElement
 	public String getUsername() {
 		return username;
 	}
@@ -46,6 +51,7 @@ public class User {
 		this.username = username;
 	}
 
+	@XmlElement
 	public String getName() {
 		return name;
 	}
@@ -54,6 +60,7 @@ public class User {
 		this.name = name;
 	}
 
+	@XmlElement
 	public String getSurname() {
 		return surname;
 	}
@@ -62,6 +69,7 @@ public class User {
 		this.surname = surname;
 	}
 
+	@XmlElement
 	public String getPassword() {
 		return password;
 	}
@@ -70,6 +78,7 @@ public class User {
 		this.password = password;
 	}
 
+	@XmlElement
 	public String getMail() {
 		return mail;
 	}
@@ -78,6 +87,7 @@ public class User {
 		this.mail = mail;
 	}
 
+	@XmlElement
 	public String getAirport() {
 		return airport;
 	}

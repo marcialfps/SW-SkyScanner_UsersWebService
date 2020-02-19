@@ -1,5 +1,7 @@
 package main.java.ws.skyscanner.usersservice.business;
 
+import java.util.List;
+
 import main.java.ws.skyscanner.usersservice.model.User;
 import main.java.ws.skyscanner.usersservice.persistence.user.UserDAO;
 import main.java.ws.skyscanner.usersservice.persistence.user.UserDataService;
@@ -30,6 +32,11 @@ public class UserManager implements UserManagerService {
 	@Override
 	public User deleteUser(String username) throws Exception {
 		return userDataService.deleteUser(username);
+	}
+
+	@Override
+	public List<User> getUsers() throws Exception {
+		return userDataService.getUsers();
 	}
 
 }
