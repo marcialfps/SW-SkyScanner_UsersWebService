@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 import main.java.ws.skyscanner.usersservice.business.UserManager;
 import main.java.ws.skyscanner.usersservice.business.UserManagerService;
 import main.java.ws.skyscanner.usersservice.model.User;
-import main.java.ws.skyscanner.usersservice.security.AESEncryptor;
 
 @Path("users")
 public class UsersService {
@@ -41,9 +40,7 @@ public class UsersService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public User getUser(@PathParam("username") String username) {
 		try {
-			User user = userManager.getUser(username);
-			user.setPassword(AESEncryptor.Encrypt(user.getPassword()));
-			return user;
+			return userManager.getUser(username);
 		} catch (Exception e) {
 			return null;
 		}
@@ -54,7 +51,6 @@ public class UsersService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response login(@PathParam("username") String username, User user) {
 		try {
-			String decryptedPass = AESEncryptor.Decrypt(user.getPassword());
 			
 			User myuser = userManager.getUser(username);
 			
@@ -63,7 +59,7 @@ public class UsersService {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
 			
-			if(myuser.getPassword().equals(decryptedPass)) {
+			if(myuser.getPassword().equals(user.getPassword())) {
 				return Response.status(Response.Status.ACCEPTED).entity(user).build();
 			} else {
 				return Response.status(Response.Status.FORBIDDEN).build();
@@ -84,8 +80,8 @@ public class UsersService {
 			if (myuser != null) {
 				return Response.status(Response.Status.CONFLICT).build();
 			} else {
-				user.setPassword(AESEncryptor.Encrypt(user.getPassword()));
 				userManager.addUser(user);
+				user = userManager.getUser(user.getUsername()); // Get the correct ID
 				return Response.status(Response.Status.CREATED).entity(user).build();
 			}
 			
@@ -103,8 +99,7 @@ public class UsersService {
 				return Response.status(Response.Status.NOT_FOUND).build();
 			}
 			
-			user.setPassword(AESEncryptor.Encrypt(user.getPassword()));
-			userManager.updateUser(user);
+			user = userManager.updateUser(user);
 			return Response.status(Response.Status.OK).entity(user).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -117,14 +112,13 @@ public class UsersService {
 	public Response deleteUser(@PathParam("username") String username, User user) {
 		try {
 			User myuser = userManager.getUser(username);
-			String decryptedPass = AESEncryptor.Decrypt(user.getPassword());
 			if (myuser == null) {
 				return Response.status(Response.Status.NOT_FOUND).build();
-			} else if (!myuser.getPassword().equals(decryptedPass)) {
+			} else if (!myuser.getPassword().equals(user.getPassword())) {
 				return Response.status(Response.Status.FORBIDDEN).build();
 			}
 			
-			userManager.deleteUser(username);
+			user = userManager.deleteUser(username);
 			return Response.status(Response.Status.OK).entity(user).build();
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

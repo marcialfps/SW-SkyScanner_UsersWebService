@@ -65,6 +65,7 @@ public class UserDAO implements UserDataService {
 		try {
 			EntityManager em = dba.getActiveEm();
 			User actualUser = this.getUser(user.getUsername());
+			actualUser = em.find(User.class, actualUser.getId());
 			actualUser.setAirport(user.getAirport());
 			actualUser.setMail(user.getMail());
 			actualUser.setName(user.getName());
@@ -75,15 +76,14 @@ public class UserDAO implements UserDataService {
 			em.persist(actualUser);
 			em.getTransaction().commit();
 
-			logger.debug("Created user: "+ user.toString());
+			logger.debug("Updated user: "+ user.toString());
+			return actualUser;
 
 		} finally {
 			// 100% sure that the transaction and entity manager will be closed
 			dba.closeEm();
 		}
 
-		// We return the result
-		return user;
 	}
 
 	@Override
@@ -92,16 +92,18 @@ public class UserDAO implements UserDataService {
 		Dba dba = new Dba();
 		try {
 			EntityManager em = dba.getActiveEm();
+			user = em.find(User.class, user.getId());
 			em.remove(user);
 			em.getTransaction().commit();
-
+			
 			logger.debug("Removed user: "+ user.toString());
+			return user;
+
 
 		} finally {
 			// 100% sure that the transaction and entity manager will be closed
 			dba.closeEm();
 		}
-		return user;
 	}
 
 	@Override
