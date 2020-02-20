@@ -22,11 +22,9 @@ import main.java.ws.skyscanner.usersservice.security.AESEncryptor;
 public class UsersService {
 	
 	private UserManagerService userManager;
-	private AESEncryptor encryptor;
 	
 	public UsersService() {
 		this.userManager = new UserManager();
-		this.encryptor = new AESEncryptor();
 	}
 	
 	@GET
@@ -43,7 +41,9 @@ public class UsersService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public User getUser(@PathParam("username") String username) {
 		try {
-			return userManager.getUser(username);
+			User user = userManager.getUser(username);
+			user.setPassword(AESEncryptor.Encrypt(user.getPassword()));
+			return user;
 		} catch (Exception e) {
 			return null;
 		}
@@ -54,7 +54,7 @@ public class UsersService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response login(@PathParam("username") String username, User user) {
 		try {
-			String decryptedPass = encryptor.decrypt(user.getPassword());
+			String decryptedPass = AESEncryptor.Decrypt(user.getPassword());
 			
 			User myuser = userManager.getUser(username);
 			
@@ -84,7 +84,7 @@ public class UsersService {
 			if (myuser != null) {
 				return Response.status(Response.Status.CONFLICT).build();
 			} else {
-				user.setPassword(encryptor.encrypt(user.getPassword()));
+				user.setPassword(AESEncryptor.Encrypt(user.getPassword()));
 				userManager.addUser(user);
 				return Response.status(Response.Status.CREATED).entity(user).build();
 			}
@@ -103,7 +103,7 @@ public class UsersService {
 				return Response.status(Response.Status.NOT_FOUND).build();
 			}
 			
-			user.setPassword(encryptor.encrypt(user.getPassword()));
+			user.setPassword(AESEncryptor.Encrypt(user.getPassword()));
 			userManager.updateUser(user);
 			return Response.status(Response.Status.OK).entity(user).build();
 		} catch (Exception e) {
@@ -117,7 +117,7 @@ public class UsersService {
 	public Response deleteUser(@PathParam("username") String username, User user) {
 		try {
 			User myuser = userManager.getUser(username);
-			String decryptedPass = encryptor.decrypt(user.getPassword());
+			String decryptedPass = AESEncryptor.Decrypt(user.getPassword());
 			if (myuser == null) {
 				return Response.status(Response.Status.NOT_FOUND).build();
 			} else if (!myuser.getPassword().equals(decryptedPass)) {
