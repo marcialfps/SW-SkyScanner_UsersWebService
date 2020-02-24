@@ -26,7 +26,7 @@ public class UserDAO implements UserDataService {
 					.getResultList();
 
 			if(!userList.isEmpty()) {
-				logger.debug("Returning user: "+ userList.get(0).toString());
+				logger.info("Returning user: "+ userList.get(0).toString());
 			} else {
 				return null;
 			}
@@ -48,7 +48,7 @@ public class UserDAO implements UserDataService {
 			em.persist(user);
 			em.getTransaction().commit();
 
-			logger.debug("Created user: "+ user.toString());
+			logger.info("Created user: "+ user.toString());
 
 		} finally {
 			// 100% sure that the transaction and entity manager will be closed
@@ -76,7 +76,7 @@ public class UserDAO implements UserDataService {
 			em.persist(actualUser);
 			em.getTransaction().commit();
 
-			logger.debug("Updated user: "+ user.toString());
+			logger.info("Updated user: "+ user.toString());
 			return actualUser;
 
 		} finally {
@@ -96,7 +96,7 @@ public class UserDAO implements UserDataService {
 			em.remove(user);
 			em.getTransaction().commit();
 			
-			logger.debug("Removed user: "+ user.toString());
+			logger.info("Removed user: "+ user.toString());
 			return user;
 
 
@@ -118,7 +118,7 @@ public class UserDAO implements UserDataService {
 					.getResultList();
 
 			if(!userList.isEmpty()) {
-				logger.debug("Returning users");
+				logger.info("Returning users");
 			} else {
 				return null;
 			}

@@ -28,7 +28,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<properties>
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:hsqldb:hsql://localhost/skyscannerdb" />
+				value="jdbc:hsqldb:hsql://156.35.95.125:9001/test" />
 			<property name="javax.persistence.jdbc.user" value="SA" />
 			<property name="javax.persistence.jdbc.driver"
 				value="org.hsqldb.jdbc.JDBCDriver" />
@@ -47,7 +47,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<properties>
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:hsqldb:hsql://localhost/skyscannerdb" />
+				value="jdbc:hsqldb:hsql://156.35.95.125:9001/test" />
 			<property name="javax.persistence.jdbc.user"
 				value="SA" />
 			<property name="javax.persistence.jdbc.password"

@@ -1,15 +1,9 @@
 package main.java.ws.skyscanner.usersservice.security;
 
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
  
@@ -30,7 +24,7 @@ public class AESEncryptor {
         try {
             msjEncryptedbyte = msj.getBytes(ENCODING);
             keyByte = getKeyBytes(KEY);
-        } catch (NullPointerException | UnsupportedEncodingException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return msjEncrypted;
         }
@@ -44,7 +38,7 @@ public class AESEncryptor {
             msjEncryptedbyte = cp.doFinal(msjEncryptedbyte);
             msjEncrypted = new String(Base64.getEncoder().encode(msjEncryptedbyte));
             return msjEncrypted;
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return msjEncrypted;
         }
@@ -57,7 +51,7 @@ public class AESEncryptor {
         try {
             msjEncryptedByte = Base64.getDecoder().decode(msjEncrypted.getBytes("UTF8"));
             keyByte = getKeyBytes(KEY);
-        } catch (NullPointerException | UnsupportedEncodingException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return msjDecrypted;
         }
@@ -69,7 +63,7 @@ public class AESEncryptor {
             msjEncryptedByte = cp.doFinal(msjEncryptedByte);
             msjDecrypted = new String(msjEncryptedByte, ENCODING);
             return msjDecrypted;
-        } catch (UnsupportedEncodingException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return msjDecrypted;
         }
